@@ -10,9 +10,12 @@ router.get("/", async (req, res) => {
   try {
     // find all categories
     const allProducts = await Product.findAll({
-      include: [{ model: Category, through: ProductTag, as: "tags" }],
+      include: [
+        { model: Category },
+        { model: Tag, through: ProductTag, as: "tags" },
+      ],
     });
-    // be sure to include its associated Products
+    //be sure to include its associated Products
     if (!allProducts) {
       res.status(404).json({ message: "No products found!" });
       return;
@@ -29,7 +32,10 @@ router.get("/:id", async (req, res) => {
   // be sure to include its associated Category and Tag data
   try {
     const productData = await Product.findByPk(req.params.id, {
-      include: [{ model: Category, through: ProductTag, as: "tags" }],
+      include: [
+        { model: Category },
+        { model: Tag, through: ProductTag, as: "tags" },
+      ],
     });
 
     if (!productData) {
@@ -56,6 +62,7 @@ router.post("/", (req, res) => {
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
+
       if (req.body.tagIds.length) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
