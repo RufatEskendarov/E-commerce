@@ -49,7 +49,7 @@ router.post("/", (req, res) => {
         const productTagIdArr = req.body.productIds.map((product_id) => {
           return {
             product_id,
-            tag_id: tag_id,
+            tag_id: tag.id,
           };
         });
         return ProductTag.bulkCreate(productTagIdArr);
@@ -84,7 +84,7 @@ router.put("/:id", (req, res) => {
         .map((product_id) => {
           return {
             product_id,
-            tag_id: tag_id,
+            tag_id: req.params.id,
           };
         });
       // figure out which ones to remove
